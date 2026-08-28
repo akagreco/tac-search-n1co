@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model SavedImage {
+  id          String   @id
+  userId      String   @default("local")
+  providerId  String
+  sourceId    String
+  title       String
+  payload     Json
+  savedAt     DateTime @default(now())
+  collections Collection[]
+
+  @@index([userId, savedAt])
+}
+
+model Collection {
+  id        String       @id @default(cuid())
+  userId    String       @default("local")
+  name      String
+  createdAt DateTime     @default(now())
+  images    SavedImage[]
+
+  @@index([userId, createdAt])
+}
+
+model RecentSearch {
+  id          String   @id @default(cuid())
+  userId      String   @default("local")
+  query       String
+  resultCount Int      @default(0)
+  searchedAt  DateTime @default(now())
+
+  @@index([userId, searchedAt])
+}
+
+model SearchCache {
+  key       String   @id
+  payload   Json
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}

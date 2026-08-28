@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://tac:tac@postgres:5432/tac_search
+      REDIS_URL: redis://redis:6379
+      MOCK_MODE: auto
+    depends_on:
+      - postgres
+      - redis
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: tac
+      POSTGRES_PASSWORD: tac
+      POSTGRES_DB: tac_search
+    volumes:
+      - tac_postgres:/var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - tac_redis:/data
+
+volumes:
+  tac_postgres:
+  tac_redis:

@@ -1,0 +1,46 @@
+name: Verificar proyecto
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Pruebas y compilación
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      MOCK_MODE: auto
+      NEXT_PUBLIC_MOCK_MODE: auto
+      USE_SYSTEM_CA: "false"
+      NEXT_TELEMETRY_DISABLED: "1"
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v6
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar controles
+        run: npm run check
+
+      - name: Comprobar build de producción
+        run: npm run build

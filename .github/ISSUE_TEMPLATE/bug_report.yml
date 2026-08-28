@@ -1,0 +1,44 @@
+name: Informar un problema
+description: Avisar sobre un error reproducible en TAC Search.
+title: "[Error]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Qué ocurrió
+      description: Contá qué esperabas y qué sucedió realmente.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Cómo reproducirlo
+      description: Indicá los pasos, la búsqueda usada y los filtros seleccionados.
+      placeholder: |
+        1. Abrir...
+        2. Buscar...
+        3. Ver el error...
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Navegador y dispositivo
+      placeholder: Chrome 140 en Windows 11
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Capturas o detalles adicionales
+      description: No pegues claves de API, contraseñas ni otros datos privados.
+
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Confirmación
+      options:
+        - label: Revisé que este informe no contiene claves ni datos privados.
+          required: true
